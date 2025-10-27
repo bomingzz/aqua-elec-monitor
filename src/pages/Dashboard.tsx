@@ -4,6 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { LineChart, Line, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, ComposedChart } from "recharts";
 import { ChevronDown, Zap, Droplets, TrendingUp, TrendingDown } from "lucide-react";
+import { SankeyChart } from "@/components/SankeyChart";
 
 type TimeRange = "day" | "month" | "year";
 type EnergyType = "electric" | "water";
@@ -30,14 +31,27 @@ const Dashboard = () => {
 
   // Mock data for distribution
   const distributionData = [
-    { name: "教学", value: 450, percent: 35, change: 5.8 },
-    { name: "住宿", value: 320, percent: 25, change: -2.1 },
-    { name: "餐饮", value: 200, percent: 16, change: 3.2 },
-    { name: "行政", value: 150, percent: 12, change: -1.5 },
-    { name: "公区", value: 100, percent: 8, change: 0.8 },
-    { name: "地下室", value: 40, percent: 3, change: 1.2 },
-    { name: "体育场", value: 15, percent: 1, change: -0.5 },
+    { name: "教学", value: 450, percent: 35, change: 5.8, color: "#3b82f6" },
+    { name: "住宿", value: 320, percent: 25, change: -2.1, color: "#f59e0b" },
+    { name: "餐饮", value: 200, percent: 16, change: 3.2, color: "#a855f7" },
+    { name: "行政", value: 150, percent: 12, change: -1.5, color: "#ec4899" },
+    { name: "公区", value: 100, percent: 8, change: 0.8, color: "#10b981" },
+    { name: "地下室", value: 40, percent: 3, change: 1.2, color: "#06b6d4" },
+    { name: "体育场", value: 15, percent: 1, change: -0.5, color: "#f97316" },
   ];
+
+  // Sankey chart data
+  const sankeyData = {
+    nodes: [
+      { name: "总用电量", color: "#3b82f6" },
+      ...distributionData.map(d => ({ name: d.name, color: d.color }))
+    ],
+    links: distributionData.map((d, i) => ({
+      source: 0,
+      target: i + 1,
+      value: d.value
+    }))
+  };
 
   // Mock data for usage analysis
   const usageAnalysisData = [
@@ -164,30 +178,8 @@ const Dashboard = () => {
               </Button>
             </div>
           </CardHeader>
-          <CardContent className="space-y-3">
-            {distributionData.map((item, index) => (
-              <div key={index} className="space-y-1">
-                <div className="flex justify-between text-sm">
-                  <span className="text-foreground">{item.name}</span>
-                  <div className="flex items-center gap-3">
-                    <span className="font-semibold">{item.value}度</span>
-                    <span className={item.change > 0 ? "text-destructive" : "text-success"}>
-                      {item.change > 0 ? <TrendingUp className="inline w-3 h-3" /> : <TrendingDown className="inline w-3 h-3" />}
-                      {Math.abs(item.change)}%
-                    </span>
-                  </div>
-                </div>
-                <div className="flex items-center gap-2">
-                  <div className="flex-1 bg-muted rounded-full h-2 overflow-hidden">
-                    <div 
-                      className="h-full bg-gradient-to-r from-primary to-primary/80 rounded-full"
-                      style={{ width: `${item.percent}%` }}
-                    />
-                  </div>
-                  <span className="text-xs text-muted-foreground w-10 text-right">{item.percent}%</span>
-                </div>
-              </div>
-            ))}
+          <CardContent className="flex justify-center py-6">
+            <SankeyChart data={sankeyData} width={350} height={380} />
           </CardContent>
         </Card>
 

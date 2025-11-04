@@ -6,7 +6,7 @@ import { LineChart, Line, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, L
 import { ChevronDown, Zap, Droplets, TrendingUp, TrendingDown } from "lucide-react";
 import { SankeyChart } from "@/components/SankeyChart";
 
-type TimeRange = "day" | "month" | "year";
+type TimeRange = "month" | "quarter" | "year";
 type EnergyType = "electric" | "water";
 type DistributionBy = "area" | "account";
 
@@ -85,8 +85,8 @@ const Dashboard = () => {
         <div className="px-4 py-3">
           <Tabs value={timeRange} onValueChange={(v) => setTimeRange(v as TimeRange)} className="w-full">
             <TabsList className="grid w-full grid-cols-3 h-10">
-              <TabsTrigger value="day">当日统计</TabsTrigger>
               <TabsTrigger value="month">月统计</TabsTrigger>
+              <TabsTrigger value="quarter">季度统计</TabsTrigger>
               <TabsTrigger value="year">年统计</TabsTrigger>
             </TabsList>
           </Tabs>
@@ -94,6 +94,13 @@ const Dashboard = () => {
           {timeRange === "month" && (
             <div className="flex items-center justify-center gap-2 mt-3">
               <span className="text-lg font-semibold">2022.10</span>
+              <ChevronDown className="w-5 h-5 text-muted-foreground" />
+            </div>
+          )}
+          
+          {timeRange === "quarter" && (
+            <div className="flex items-center justify-center gap-2 mt-3">
+              <span className="text-lg font-semibold">2022年第4季度</span>
               <ChevronDown className="w-5 h-5 text-muted-foreground" />
             </div>
           )}
